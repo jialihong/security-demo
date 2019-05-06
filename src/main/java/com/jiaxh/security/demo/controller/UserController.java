@@ -51,7 +51,7 @@ public class UserController {
     @JsonView(value = User.UserSimpleView.class)
     public List<User> searchUser(UserQuery userQuery){
 
-        System.out.println("use searchUser() ... ");
+        System.out.println("useController searchUser() ... ");
 
         System.out.println(ReflectionToStringBuilder.toString(userQuery, ToStringStyle.MULTI_LINE_STYLE));
         System.out.println(userQuery.toString());
