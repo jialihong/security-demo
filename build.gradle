@@ -53,6 +53,7 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
 
     compile project('browser')
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     
 }
 
