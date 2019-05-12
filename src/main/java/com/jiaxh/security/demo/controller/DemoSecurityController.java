@@ -38,19 +38,19 @@ public class DemoSecurityController {
 
     @RequestMapping("/authentication/require")
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-    public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public void requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         if(savedRequest != null){
             final String redirectUrl = savedRequest.getRedirectUrl();
             logger.info("引发跳转的请求为："+redirectUrl);
-            if(StringUtils.endsWithIgnoreCase(redirectUrl,".html")){
+//            if(StringUtils.endsWithIgnoreCase(redirectUrl,".html")){
                 //重定向到不同的页面
                 redirectStrategy.sendRedirect(request,response,securityProperties.getBrowser().getLoginPage());
-            }
+//            }
         }
 
-        return new SimpleResponse("访问的服务需要身份认证，请引导用户到登录页面");
+//        return new SimpleResponse("访问的服务需要身份认证，请引导用户到登录页面");
     }
 }
