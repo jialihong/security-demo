@@ -1,6 +1,7 @@
 package com.jiaxh.security.demo.configuration;
 
 import com.jiaxh.security.demo.properties.SecurityProperties;
+import com.jiaxh.security.demo.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * WebSecurityConfigurerAdapter 是Spring Security提供的一个安全适配器类
@@ -43,8 +45,13 @@ public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+        validateCodeFilter.setAuthenticationFailureHandler(jiaAuthenticationFailureHandler);
         //http.httpBasic()
-        http.formLogin()
+        http
+                //将自定义的验证码校验的过滤器设置到UsernamePasswordAuthenticationFilter之前
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin()
                 //使用自定义的登录页面的url，如果不加该方法则使用security默认的登录页
                 .loginPage("/authentication/require")
                 //登录页提交时的url
@@ -56,7 +63,8 @@ public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 //允许所有请求访问的url，即该url不设权限，所有请求均可访问，否则会报 重定向次数过多 的错误
-                .antMatchers("/authentication/require",securityProperties.getBrowser().getLoginPage()).permitAll()
+                .antMatchers("/authentication/require",securityProperties.getBrowser().getLoginPage(),"/code/image")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
         .and()

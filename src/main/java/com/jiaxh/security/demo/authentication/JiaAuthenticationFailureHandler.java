@@ -3,6 +3,7 @@ package com.jiaxh.security.demo.authentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jiaxh.security.demo.properties.LoginType;
 import com.jiaxh.security.demo.properties.SecurityProperties;
+import com.jiaxh.security.demo.support.SimpleResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class JiaAuthenticationFailureHandler extends SimpleUrlAuthenticationFail
         if(LoginType.JSON.equals(securityProperties.getBrowser().getLoginType())){
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(exception));
+//            response.getWriter().write(objectMapper.writeValueAsString(exception));
+            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
         }else{
             //配置文件中的LoginType为redirect时,使用spring security默认的登录失败处理器
             super.onAuthenticationFailure(request,response,exception);
