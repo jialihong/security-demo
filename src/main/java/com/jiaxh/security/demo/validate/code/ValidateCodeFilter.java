@@ -1,6 +1,5 @@
 package com.jiaxh.security.demo.validate.code;
 
-import com.jiaxh.security.demo.authentication.JiaAuthenticationFailureHandler;
 import com.jiaxh.security.demo.controller.ValidateCodeController;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -17,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 自定义的验证码校验过滤器
+ */
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
     private AuthenticationFailureHandler authenticationFailureHandler;
@@ -49,8 +51,17 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         if(StringUtils.isBlank(codeInRequest)){
             throw new ValidateCodeException("验证码的值不能为空");
         }
-        // ......
-        //清楚session中的验证码
+        if(codeInSession == null){
+            throw new ValidateCodeException("验证码不存在");
+        }
+        if(codeInSession.isExpired()){
+            sessionStrategy.removeAttribute(request,ValidateCodeController.SESSION_KEY);
+            throw new ValidateCodeException("验证码已过期");
+        }
+        if(!StringUtils.equals(codeInSession.getCode(),codeInRequest)){
+            throw new ValidateCodeException("验证码不正确");
+        }
+        //清除session中的验证码
         sessionStrategy.removeAttribute(request,ValidateCodeController.SESSION_KEY);
     }
 }

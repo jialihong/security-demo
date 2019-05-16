@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 自定义失败处理器
  * implements AuthenticationFailureHandler
  * @Auther: jiaxh
  * @Date: 2019/5/8 16:29
@@ -40,8 +41,8 @@ public class JiaAuthenticationFailureHandler extends SimpleUrlAuthenticationFail
         if(LoginType.JSON.equals(securityProperties.getBrowser().getLoginType())){
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json;charset=UTF-8");
-//            response.getWriter().write(objectMapper.writeValueAsString(exception));
-            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
+            response.getWriter().write(objectMapper.writeValueAsString(exception));
+//            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(exception.getMessage())));
         }else{
             //配置文件中的LoginType为redirect时,使用spring security默认的登录失败处理器
             super.onAuthenticationFailure(request,response,exception);
