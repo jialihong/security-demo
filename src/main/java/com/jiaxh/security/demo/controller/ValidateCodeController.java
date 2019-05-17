@@ -1,8 +1,11 @@
 package com.jiaxh.security.demo.controller;
 
+import com.jiaxh.security.core.properties.SecurityProperties;
 import com.jiaxh.security.demo.validate.code.ImageCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -16,6 +19,8 @@ import java.util.Random;
 
 @RestController
 public class ValidateCodeController {
+    @Autowired
+    private SecurityProperties securityProperties;
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
@@ -24,7 +29,7 @@ public class ValidateCodeController {
     @GetMapping("/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws Exception{
         //1、根据随机数生成图片
-        ImageCode imageCode = createImageCode(request);
+        ImageCode imageCode = createImageCode(new ServletWebRequest(request));
         //2、将随机数存放到session中  request/key/value
         sessionStrategy.setAttribute(new ServletWebRequest(request),SESSION_KEY,imageCode);
         //3、将生成的图片写到响应中
@@ -32,9 +37,12 @@ public class ValidateCodeController {
 
     }
 
-    private ImageCode createImageCode(HttpServletRequest request) {
-        int width = 67;
-        int height = 23;
+    private ImageCode createImageCode(ServletWebRequest request) {
+//        int width = 67;
+//        int height = 23;
+        //获取配置信息
+        int width = ServletRequestUtils.getIntParameter(request.getRequest(),"width",securityProperties.getCode().getImage().getWidth());
+        int height = ServletRequestUtils.getIntParameter(request.getRequest(),"height",securityProperties.getCode().getImage().getHeight());
         BufferedImage bufferedImage = new BufferedImage(width,height,BufferedImage.TYPE_3BYTE_BGR);
         Graphics graphics = bufferedImage.getGraphics();
         Random random = new Random();
@@ -51,14 +59,16 @@ public class ValidateCodeController {
         }
 
         String sRand = "";
-        for (int i= 0; i < 4; i++){
+        //从配置文件中获取长度
+        for (int i= 0; i < securityProperties.getCode().getImage().getLength(); i++){
             String rand = String.valueOf(random.nextInt(10));
             sRand += rand;
             graphics.setColor(new Color(20+random.nextInt(110),20+random.nextInt(110),20+random.nextInt(110)));
             graphics.drawString(rand,13 * i + 6,16);
         }
         graphics.dispose();
-        return new ImageCode(bufferedImage,sRand,60);
+        //获取过期时间
+        return new ImageCode(bufferedImage,sRand,securityProperties.getCode().getImage().getExpireIn());
     }
 
     /**

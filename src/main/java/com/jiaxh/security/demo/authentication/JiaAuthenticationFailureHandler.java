@@ -1,15 +1,13 @@
 package com.jiaxh.security.demo.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jiaxh.security.demo.properties.LoginType;
-import com.jiaxh.security.demo.properties.SecurityProperties;
-import com.jiaxh.security.demo.support.SimpleResponse;
+import com.jiaxh.security.core.properties.LoginType;
+import com.jiaxh.security.core.properties.SecurityProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,6 @@
 package com.jiaxh.security.demo.controller;
 
-import com.jiaxh.security.demo.properties.SecurityProperties;
-import com.jiaxh.security.demo.support.SimpleResponse;
-import org.apache.commons.lang3.StringUtils;
+import com.jiaxh.security.core.properties.SecurityProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

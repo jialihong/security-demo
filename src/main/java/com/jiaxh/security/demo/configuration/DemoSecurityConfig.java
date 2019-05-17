@@ -1,6 +1,6 @@
 package com.jiaxh.security.demo.configuration;
 
-import com.jiaxh.security.demo.properties.SecurityProperties;
+import com.jiaxh.security.core.properties.SecurityProperties;
 import com.jiaxh.security.demo.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -47,6 +47,9 @@ public class DemoSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
         validateCodeFilter.setAuthenticationFailureHandler(jiaAuthenticationFailureHandler);
+        validateCodeFilter.setSecurityProperties(securityProperties);
+        validateCodeFilter.afterPropertiesSet();
+
         //http.httpBasic()
         http
                 //将自定义的验证码校验的过滤器设置到UsernamePasswordAuthenticationFilter之前
