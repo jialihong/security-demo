@@ -6,3 +6,4 @@ pluginManagement {
 rootProject.name = 'demo'
 
 includeFlat('security-core')
+includeFlat('security-browser')
