@@ -1,6 +1,6 @@
 package com.jiaxh.security.demo.code;
 
-import com.jiaxh.security.core.validate.code.ImageCode;
+//import com.jiaxh.security.core.validate.code.ImageCode;
 import com.jiaxh.security.core.validate.code.ValidateCodeGenerator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
