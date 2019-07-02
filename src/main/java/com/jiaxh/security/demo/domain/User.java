@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.jiaxh.security.demo.annotation.MyAnnotation;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.NotBlank;
+//import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.Date;
 
@@ -28,7 +28,7 @@ public class User {
     @Past(message = "birthday必须为过去时间")
     private Date birthday;
 
-    @NotBlank(message = "password不能为空")
+//    @NotBlank(message = "password不能为空")
     private String password;
 
     @JsonView(value = UserSimpleView.class)
